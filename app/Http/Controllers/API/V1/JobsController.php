@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Events\JobApproved;
-use App\Events\JobCreated;
+use App\APIs\Github\GithubAPI;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Gate;
+use App\Utility\Pagination;
 use App\Job;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
 
 class JobsController extends Controller
 {
+
     public function __construct()
     {
 //        $this->middleware('auth', ['except' => ['show']]);
@@ -57,5 +56,20 @@ class JobsController extends Controller
         $jobs = Job::haversineQuery($latitude, $longitude, $radius, $page);
 
         return $jobs;
+    }
+
+    public function github(Request $request)
+    {
+        $page = $request->input('page', 1);
+        
+        $github = new GithubAPI();
+        
+        $jobs = $github->getJobs($request->all());
+
+        return Pagination::paginate(
+            $jobs,
+            $page,
+            "/api/v1/jobs/github?page="
+        );
     }
 }

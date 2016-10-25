@@ -14,7 +14,7 @@
         <div v-else>
             <div class="media" v-for="job in jobs">
                 <hr>
-                <a href="/jobs/{{job.id}}">
+                <a href="{{ job.url ? job.url : '/jobs/'+job.id}}">
                     <div class="media-left">
                         <!--<img class="media-object" src="{{job.image}}" alt="">-->
                     </div>

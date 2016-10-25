@@ -10,5 +10,7 @@ Route::group(['namespace' => 'API\V1', 'prefix' => '/v1'], function () {
 
     Route::get('/jobs/search', 'JobsController@search');
 
+    Route::get('/jobs/github', 'JobsController@github');
+
     Route::get('tags', 'TagsController@index');
 });
