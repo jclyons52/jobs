@@ -7,7 +7,12 @@
                 </div>
             </div>
 </div>
-    <div class="row">
+<div v-if="loading">
+    <div class="loading-screen">
+        <img src="/images/giphy.gif" alt="">
+    </div>
+</div>
+    <div v-else class="row">
         <div v-if="this.jobs.length == 0">
             <h1>No Jobs Found</h1>
         </div>
@@ -44,7 +49,20 @@
     </div>
 
 </template>
-
+<style>
+.loading-screen {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 80vh;
+    background-color: #E5EFF1;
+}
+.loading-screen img {
+    height: 100%;
+}
+</style>
 <script>
     import {changeUrl} from "../vuex/actions"
     export default {
@@ -54,6 +72,7 @@
         data () {
             return {
                 jobs: [],
+                loading: true,
                 searching: false,
                 pagination: {
                     total: null,
@@ -110,7 +129,7 @@
             },
 
             get(url) {
-
+                this.loading = true;
                 this.$http.get(url).then( (response) => {
                     const res = response.json();
                     this.$set('jobs', res.data)
@@ -122,7 +141,7 @@
                     this.pagination.prev_page_url = res.prev_page_url
                     this.pagination.from = res.from
                     this.pagination.to = res.to
-
+                    this.loading = false;
                 })
             }
         }

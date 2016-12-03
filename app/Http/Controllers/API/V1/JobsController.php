@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\APIs\Github\GithubAPI;
+use App\APIs\Indeed\IndeedAPI;
 use App\Http\Controllers\Controller;
 use App\Utility\Pagination;
 use App\Job;
@@ -63,6 +64,21 @@ class JobsController extends Controller
         $page = $request->input('page', 1);
         
         $github = new GithubAPI();
+        
+        $jobs = $github->getJobs($request->all());
+
+        return Pagination::paginate(
+            $jobs,
+            $page,
+            "/api/v1/jobs/github?page="
+        );
+    }
+
+     public function indeed(Request $request)
+    {
+        $page = $request->input('page', 1);
+        
+        $github = new IndeedAPI();
         
         $jobs = $github->getJobs($request->all());
 

@@ -2,14 +2,14 @@
 
 namespace App\APIs\Github;
 
+use App\APIs\BaseAPI;
 use App\Transformers\GithubJobTransformer;
-use Illuminate\Http\Request;
 use JobApis\Jobs\Client\Providers\GithubProvider;
 use JobApis\Jobs\Client\Queries\GithubQuery;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 
-class GithubAPI
+class GithubAPI extends BaseAPI
 {
     private $params = [
         'search',
@@ -18,6 +18,10 @@ class GithubAPI
         'description',
         'location',
         'full_time'
+    ];
+
+    private $defaults = [
+        'search' => 'php'
     ];
 
     public function getJobs($params)
@@ -39,14 +43,13 @@ class GithubAPI
         return collect($array['data']);
     }
 
-    private function filterParams($params)
+    protected function getParams(): \Illuminate\Support\Collection
     {
-        $accepted = collect($this->params);
+        return collect($this->params);
+    }
 
-        $given = collect($params);
-
-        return $given->filter(function ($item, $key) use ($accepted) {
-            return $accepted->contains($key);
-        })->toArray();
+    protected function getDefauls() : \Illuminate\Support\Collection
+    {
+        return collect($this->defaults);
     }
 }
